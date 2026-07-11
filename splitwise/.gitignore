@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+*.log
+
+# Real login credentials for every account (plaintext) - never publish,
+# even to a private repo. Keep this file locally only.
+text.md

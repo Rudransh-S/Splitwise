@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SplitWise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- PWA: installable on Android/Chrome via manifest, and on iOS Safari
+       via the apple-* tags (iOS ignores the manifest for home-screen
+       install). -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#10b981" />
+  <link rel="icon" href="/icons/icon-512.png" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SplitWise" />
+</head>
+<body>
+  <!-- ===== Login / Sign up ===== -->
+  <section id="view-auth" class="auth-screen" hidden>
+    <div class="auth-visual">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <span class="brand-name" style="color:#fff">SplitWise</span>
+      </div>
+      <h1 class="auth-headline">Expenses shared.<br />Memories united.</h1>
+      <p class="auth-subhead">The simplest way to split bills and track expenses with friends.</p>
+      <div class="auth-features">
+        <div class="auth-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div><div class="auth-feature-title">Create groups</div><div class="auth-feature-sub">Invite your friends</div></div>
+        </div>
+        <div class="auth-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+          <div><div class="auth-feature-title">Add expenses</div><div class="auth-feature-sub">Track effortlessly</div></div>
+        </div>
+        <div class="auth-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          <div><div class="auth-feature-title">Settle up</div><div class="auth-feature-sub">Stay balanced</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-card-wrap">
+      <div class="auth-card" id="authFormArea"></div>
+    </div>
+  </section>
+
+  <div class="app" id="appShell" hidden>
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <span class="brand-name">SplitWise</span>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-ico">home</span> Dashboard</button>
+        <button class="nav-item" data-view="groups"><span class="nav-ico">groups</span> Groups</button>
+        <button class="nav-item" data-view="expenses"><span class="nav-ico">list</span> Expenses</button>
+        <button class="nav-item" data-view="balances"><span class="nav-ico">scale</span> Balances</button>
+        <button class="nav-item" data-view="friends"><span class="nav-ico">people</span> Friends</button>
+        <button class="nav-item" data-view="activity"><span class="nav-ico">clock</span> Activity</button>
+      </nav>
+
+      <div class="nav-label">OTHER</div>
+      <nav class="nav">
+        <button class="nav-item" data-view="statistics"><span class="nav-ico">chart</span> Statistics</button>
+        <button class="nav-item" data-view="recurring"><span class="nav-ico">repeat</span> Recurring Expenses</button>
+        <button class="nav-item" data-view="settings"><span class="nav-ico">gear</span> Settings</button>
+        <button class="nav-item" data-view="help"><span class="nav-ico">help</span> Help &amp; Support</button>
+      </nav>
+
+      <div class="side-card">
+        <p class="side-card-title">Split expenses stress-free</p>
+        <p class="side-card-text">Share costs fairly with friends.</p>
+      </div>
+    </aside>
+
+    <!-- Tapping outside the open mobile drawer closes it -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- ===== Main ===== -->
+    <main class="main">
+      <!-- Top bar -->
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="mobile-nav-toggle" id="mobileNavToggle" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1 class="welcome" id="welcomeLine">Welcome back</h1>
+            <p class="subtle">Here's what's happening with your groups</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <label class="viewer-pick" id="viewerPickWrap">
+            Viewing as
+            <div class="select-shell auto">
+              <button type="button" class="select-trigger" id="viewerSelect-trigger"><span class="label">Select...</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <select id="viewerSelect"></select>
+            </div>
+          </label>
+          <button class="btn-primary" id="newExpenseBtn">+ New Expense</button>
+          <button class="profile-avatar-btn" id="profileAvatarBtn" title="My profile">
+            <div class="avatar" id="topbarAvatar"></div>
+          </button>
+        </div>
+      </header>
+
+      <!-- Views get swapped in here -->
+      <section id="view-dashboard" class="view"></section>
+      <section id="view-group" class="view" hidden></section>
+      <section id="view-placeholder" class="view" hidden></section>
+      <section id="view-activity" class="view" hidden></section>
+      <section id="view-expenses" class="view" hidden></section>
+      <section id="view-balances" class="view" hidden></section>
+      <section id="view-friends" class="view" hidden></section>
+      <section id="view-statistics" class="view" hidden></section>
+      <section id="view-profile" class="view" hidden></section>
+      <section id="view-groups" class="view" hidden></section>
+      <section id="view-admin" class="view" hidden></section>
+
+      <footer class="app-footer">&copy; 2026 SplitWise. All rights reserved.</footer>
+    </main>
+  </div>
+
+  <!-- ===== New / Edit Expense modal ===== -->
+  <div class="modal-backdrop" id="expenseModal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="expenseModalTitle">New expense</h2>
+        <button class="icon-btn danger" id="closeModal">Close</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="field">
+          <span>Group</span>
+          <div class="select-shell">
+            <button type="button" class="select-trigger" id="mGroup-trigger"><span class="label">Select...</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+            <select id="mGroup"></select>
+          </div>
+        </label>
+
+        <div class="field-row">
+          <label class="field grow">
+            <span>Description</span>
+            <input type="text" id="mDesc" placeholder="Dinner at Curlies" />
+          </label>
+          <label class="field">
+            <span>Amount</span>
+            <input type="number" id="mAmount" placeholder="0" min="0" step="0.01" />
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field grow">
+            <span>Paid by</span>
+            <div class="select-shell">
+              <button type="button" class="select-trigger" id="mPayer-trigger"><span class="label">Select...</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <select id="mPayer"></select>
+            </div>
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input type="date" id="mDate" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Split method</span>
+          <div class="select-shell">
+            <button type="button" class="select-trigger" id="mSplitType-trigger"><span class="label">Select...</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+            <select id="mSplitType">
+              <option value="equal">Equally</option>
+              <option value="exact">By exact amounts</option>
+              <option value="percent">By percentage</option>
+              <option value="shares">By shares</option>
+            </select>
+          </div>
+        </label>
+
+        <div class="split-hint" id="mSplitHint"></div>
+        <div class="split-toolbar">
+          <input type="text" id="mSplitSearch" class="input-bare grow" placeholder="Search people..." />
+          <button type="button" class="btn-ghost sm" id="selectAllBtn">Select all</button>
+          <button type="button" class="btn-ghost sm" id="selectNoneBtn">Select none</button>
+        </div>
+        <div id="mSplitInputs" class="split-rows"></div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn-ghost" id="cancelExpense">Cancel</button>
+        <button class="btn-primary" id="saveExpense">Add expense</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New group modal -->
+  <div class="modal-backdrop" id="groupModal" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-head">
+        <h2>New group</h2>
+        <button class="icon-btn danger" id="closeGroupModal">Close</button>
+      </div>
+      <div class="modal-body">
+        <label class="field">
+          <span>Group name</span>
+          <input type="text" id="gName" placeholder="Goa Trip" />
+        </label>
+        <label class="field">
+          <span>Members (one name per line)</span>
+          <textarea id="gMembers" rows="4" placeholder="Priya&#10;Arjun&#10;Meera"></textarea>
+        </label>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" id="cancelGroup">Cancel</button>
+        <button class="btn-primary" id="saveGroup">Create group</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit group modal -->
+  <div class="modal-backdrop" id="editGroupModal" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-head">
+        <h2>Edit group</h2>
+        <button class="icon-btn danger" id="closeEditGroupModal">Close</button>
+      </div>
+      <div class="modal-body">
+        <label class="field">
+          <span>Group name</span>
+          <input type="text" id="egName" placeholder="Goa Trip" />
+        </label>
+        <label class="field">
+          <span>Logo</span>
+          <div class="emoji-grid" id="egEmojiGrid"></div>
+        </label>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" id="cancelEditGroup">Cancel</button>
+        <button class="btn-primary" id="saveEditGroup">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit profile modal -->
+  <div class="modal-backdrop" id="editProfileModal" hidden>
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <h2>Edit profile</h2>
+        <button class="icon-btn danger" id="closeEditProfileModal">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="group-meta" id="pUserIdLine" style="margin-top:-6px"></div>
+        <label class="field">
+          <span>Avatar URL (optional)</span>
+          <input type="text" id="pAvatarUrl" placeholder="https://..." />
+        </label>
+        <div class="field-row">
+          <label class="field grow">
+            <span>Email</span>
+            <input type="email" id="pEmail" placeholder="you@example.com" />
+          </label>
+          <label class="field grow">
+            <span>Phone</span>
+            <input type="text" id="pPhone" placeholder="+91 98765 43210" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Location</span>
+          <input type="text" id="pLocation" placeholder="New Delhi, India" />
+        </label>
+        <label class="field">
+          <span>Bio</span>
+          <textarea id="pBio" rows="2" placeholder="A short line about you"></textarea>
+        </label>
+        <div class="field-row">
+          <label class="field grow">
+            <span>UPI ID</span>
+            <input type="text" id="pUpi" placeholder="you@upi" />
+          </label>
+          <label class="field grow">
+            <span>Paytm</span>
+            <input type="text" id="pPaytm" placeholder="9876543210" />
+          </label>
+          <label class="field grow">
+            <span>Google Pay</span>
+            <input type="text" id="pGpay" placeholder="9876543210" />
+          </label>
+        </div>
+
+        <div class="modal-subsection">
+          <div class="panel-title" style="font-size:14px">Change name</div>
+          <label class="field">
+            <span>Display name</span>
+            <input type="text" id="pName" />
+          </label>
+          <div class="auth-error" id="pNameMsg" hidden></div>
+          <button class="btn-ghost" id="updateNameBtn">Update name</button>
+        </div>
+
+        <div class="modal-subsection">
+          <div class="panel-title" style="font-size:14px">Change password</div>
+          <div class="field-row">
+            <label class="field grow">
+              <span>Current password</span>
+              <input type="password" id="pCurrentPassword" autocomplete="current-password" />
+            </label>
+            <label class="field grow">
+              <span>New password</span>
+              <input type="password" id="pNewPassword" placeholder="At least 6 characters" autocomplete="new-password" />
+            </label>
+          </div>
+          <div class="auth-error" id="pPasswordMsg" hidden></div>
+          <button class="btn-ghost" id="updatePasswordBtn">Update password</button>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" id="cancelEditProfile">Cancel</button>
+        <button class="btn-primary" id="saveEditProfile">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expense details modal (read-only) -->
+  <div class="modal-backdrop" id="expenseDetailsModal" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-head">
+        <h2>Expense details</h2>
+        <button class="icon-btn danger" id="closeExpenseDetailsModal">Close</button>
+      </div>
+      <div class="modal-body" id="expenseDetailsBody"></div>
+      <div class="modal-foot">
+        <button class="btn-primary" id="closeExpenseDetailsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settle up (record a payment) -->
+  <div class="modal-backdrop" id="settleModal" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-head">
+        <h2>Settle up</h2>
+        <button class="icon-btn danger" id="closeSettleModal">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="who" id="settleWho" style="font-size:15px;font-weight:600"></div>
+        <div class="group-meta" id="settleGroupNote"></div>
+        <label class="field">
+          <span>Amount paid</span>
+          <input type="number" id="settleAmount" min="0" step="0.01" />
+        </label>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" id="cancelSettle">Cancel</button>
+        <button class="btn-primary" id="confirmSettle">Record payment</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

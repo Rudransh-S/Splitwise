@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check public/app.js)",
+      "Bash(curl -s -X POST http://localhost:3000/api/groups/1/settlements -H \"Content-Type: application/json\" -d '{\"paidBy\":2,\"paidTo\":1,\"amount\":25}')",
+      "Bash(curl -s http://localhost:3000/api/activity)",
+      "Bash(python3 -m json.tool)",
+      "Bash(/Applications/Tailscale.app/Contents/MacOS/Tailscale ip *)",
+      "Bash(/Applications/Tailscale.app/Contents/MacOS/Tailscale status *)"
+    ]
+  }
+}

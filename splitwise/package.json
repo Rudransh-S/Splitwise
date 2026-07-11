@@ -1,0 +1,14 @@
+{
+  "name": "splitwise-clone",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A simple full-stack Splitwise-style expense splitter",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
